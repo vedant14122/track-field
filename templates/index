@@ -6,10 +6,10 @@
 <form method="post" action="/submit" enctype="multipart/form-data">
   <input type="file" name="video" accept="video/*" required><br><br>
   <select name="activity" required>
-    <option>running</option>
-    <option>jumping</option>
-    <option>dancing</option>
-    <option>yoga</option>
+    <option>100 meter</option>
+    <option>javelin</option>
+    <option>high jump</option>
+    <option>hurdles</option>
   </select><br><br>
   <button type="submit">Submit</button>
 </form>
