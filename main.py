@@ -1,9 +1,18 @@
+import os
+
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory
 import os, uuid
 
 app = Flask(__name__, template_folder = "templates")
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 submissions = {}
 
