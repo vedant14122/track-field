@@ -11,6 +11,19 @@ submissions = {}
 def index():
     return render_template('index.html')
 
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'video' not in request.files:
+        return 'No video part', 400
+    file = request.files['video']
+    if file.filename == '':
+        return 'No selected file', 400
+
+    filename = secure_filename(file.filename)
+    save_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(save_path)
+    return f'File saved to {save_path}', 200
+
 @app.route('/submit', methods=['POST'])
 def submit():
     video = request.files['video']
