@@ -18,12 +18,17 @@ def submit():
     submission_id = str(uuid.uuid4())
     filename = f"{submission_id}_{video.filename}"
     video.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    
     submissions[submission_id] = {
         'video_path': filename,
         'activity': activity,
         'response': None
     }
+    
+    print(f"[UPLOAD] Received video: {filename} | Activity: {activity} | Submission ID: {submission_id}")
+    
     return redirect(url_for('check_response', submission_id=submission_id))
+
 
 @app.route('/check/<submission_id>')
 def check_response(submission_id):
