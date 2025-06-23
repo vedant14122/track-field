@@ -9,10 +9,8 @@
   </style>
 </head>
 <body>
-
   <h1>Admin Panel</h1>
   <div id="submissions"></div>
-
   <script>
     function loadSubmissions() {
       fetch('/api/submissions')
@@ -24,8 +22,8 @@
               <div class="submission">
                 <p><strong>ID:</strong> ${sid}</p>
                 <p><strong>Activity:</strong> ${s.activity}</p>
-                <p><strong>Video:</strong> 
-                  <a href="/uploads/${s.video_path}" target="_blank">View Video</a>
+                <p><strong>Video Link:</strong> 
+                  <a href="${s.video_link}" target="_blank">${s.video_link}</a>
                 </p>
                 <p><strong>Response:</strong> ${s.response || "No response yet"}</p>
                 <form method="POST" action="/admin/respond/${sid}">
@@ -38,12 +36,8 @@
           document.getElementById('submissions').innerHTML = html;
         });
     }
-
-    // Load immediately
     loadSubmissions();
-    // Reload every 10 seconds
     setInterval(loadSubmissions, 10000);
   </script>
-
 </body>
 </html>
