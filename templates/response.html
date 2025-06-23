@@ -1,15 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Your Submission</title>
-  <script src="{{ url_for('static', filename='poll.js') }}"></script>
+  <meta charset="UTF-8" />
+  <title>Check Response</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 40px;
+      background: #f8f9fa;
+      color: #333;
+    }
+    h1 {
+      color: #007bff;
+    }
+    .container {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    p {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .pending {
+      color: #ff8800;
+    }
+    .responded {
+      color: #28a745;
+    }
+  </style>
 </head>
 <body>
-  <h2>Activity: {{ submission.activity }}</h2>
-  <video width="400" controls src="{{ url_for('uploaded_file', filename=submission.video_path) }}"></video>
-  <div style="margin:20px;padding:10px;border:1px solid #ccc;">
-    <p id="response-text"><em>Waiting for response…</em></p>
+  <div class="container">
+    <h1>Submission ID: {{ submission_id }}</h1>
+    <p><strong>Activity:</strong> {{ submission.activity }}</p>
+    <p><strong>Uploaded Video:</strong> 
+      <a href="{{ submission.video_link }}" target="_blank">View Video</a>
+    </p>
+    <p>
+      <strong>Response:</strong> 
+      <span class="{{ 'responded' if submission.response else 'pending' }}">
+        {{ submission.response or "Pending..." }}
+      </span>
+    </p>
   </div>
-  <script>pollForResponse("{{ submission_id }}")</script>
 </body>
 </html>
