@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% set step = 3 %}
+{% block content %}
+<div class="card p-5 shadow-sm text-center">
+  <h3 class="mb-4">✅ Thanks, {{ submission.first_name or 'Athlete' }}!</h3>
+  <p>
+    Your video was uploaded successfully. Our coaches will review it and e-mail
+    feedback to <strong>{{ submission.email }}</strong> as soon as possible.
+  </p>
+  <a class="btn btn-primary mt-3" href="{{ url_for('index') }}">Upload Another Video</a>
+</div>
+{% endblock %}
