@@ -1,37 +1,15 @@
-import os
-
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory
 import os, uuid
 
-app = Flask(__name__, template_folder = "templates")
+app = Flask(__name__, template_folder="templates")
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 submissions = {}
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/upload', methods=['POST'])
-def upload():
-    if 'video' not in request.files:
-        return 'No video part', 400
-    file = request.files['video']
-    if file.filename == '':
-        return 'No selected file', 400
-
-    filename = secure_filename(file.filename)
-    save_path = os.path.join(UPLOAD_FOLDER, filename)
-    file.save(save_path)
-    return f'File saved to {save_path}', 200
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -40,17 +18,14 @@ def submit():
     submission_id = str(uuid.uuid4())
     filename = f"{submission_id}_{video.filename}"
     video.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    
+    file_link = url_for('uploaded_file', filename=filename, _external=True)
     submissions[submission_id] = {
         'video_path': filename,
         'activity': activity,
-        'response': None
+        'response': None,
+        'video_link': file_link
     }
-    
-    print(f"[UPLOAD] Received video: {filename} | Activity: {activity} | Submission ID: {submission_id}")
-    
     return redirect(url_for('check_response', submission_id=submission_id))
-
 
 @app.route('/check/<submission_id>')
 def check_response(submission_id):
@@ -68,8 +43,11 @@ def check_update(submission_id):
 
 @app.route('/admin')
 def admin():
-    pending = {sid: s for sid, s in submissions.items() if s['response'] is None}
-    return render_template('admin.html', pending=pending)
+    return render_template('admin.html')
+
+@app.route('/api/submissions')
+def api_submissions():
+    return jsonify(submissions)
 
 @app.route('/admin/respond/<submission_id>', methods=['POST'])
 def respond(submission_id):
@@ -78,13 +56,10 @@ def respond(submission_id):
         submissions[submission_id]['response'] = resp
     return redirect(url_for('admin'))
 
-print("Current submissions:", submissions)
-
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    # Bind to 0.0.0.0 for Render and listen on PORT env var if available
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
