@@ -1,29 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Admin Panel</title>
-  <meta http-equiv="refresh" content="10"> <!-- ✅ Should be inside <head> -->
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .submission { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; }
+  </style>
 </head>
 <body>
-  <h1>Pending Submissions</h1>
 
-  {% for sid, s in pending.items() %}
-    <div style="border:1px solid #ccc; margin:10px; padding:10px;">
-      <p><strong>Activity:</strong> {{ s.activity }}</p>
+  <h1>Admin Panel</h1>
+  <div id="submissions"></div>
 
-      <!-- ✅ Use 'url_for' correctly to access uploaded file -->
-      <video width="300" controls>
-        <source src="{{ url_for('uploaded_file', filename=s.video_path) }}" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
+  <script>
+    function loadSubmissions() {
+      fetch('/api/submissions')
+        .then(response => response.json())
+        .then(data => {
+          let html = '';
+          for (const [sid, s] of Object.entries(data)) {
+            html += `
+              <div class="submission">
+                <p><strong>ID:</strong> ${sid}</p>
+                <p><strong>Activity:</strong> ${s.activity}</p>
+                <p><strong>Video:</strong> 
+                  <a href="/uploads/${s.video_path}" target="_blank">View Video</a>
+                </p>
+                <p><strong>Response:</strong> ${s.response || "No response yet"}</p>
+                <form method="POST" action="/admin/respond/${sid}">
+                  <input type="text" name="response" placeholder="Enter response" required>
+                  <button type="submit">Submit Response</button>
+                </form>
+              </div>
+            `;
+          }
+          document.getElementById('submissions').innerHTML = html;
+        });
+    }
 
-      <form method="post" action="{{ url_for('admin_respond', sid=sid) }}">
-        <textarea name="response" required rows="3" cols="50" placeholder="Type reply…"></textarea><br>
-        <button type="submit">Send Response</button>
-      </form>
-    </div>
-  {% else %}
-    <p>No pending submissions.</p>
-  {% endfor %}
+    // Load immediately
+    loadSubmissions();
+    // Reload every 10 seconds
+    setInterval(loadSubmissions, 10000);
+  </script>
+
 </body>
 </html>
