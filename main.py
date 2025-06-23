@@ -1,5 +1,5 @@
 import os
-print("hello world")
+
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -77,6 +77,8 @@ def respond(submission_id):
     if submission_id in submissions:
         submissions[submission_id]['response'] = resp
     return redirect(url_for('admin'))
+
+print("Current submissions:", submissions)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
