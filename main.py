@@ -1,5 +1,5 @@
 import os
-
+print("hello world")
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
