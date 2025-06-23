@@ -1,21 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head><title>Submit Video</title></head>
-<body>
-<h1>Upload & Select Activity</h1>
-<form method="post" action="/submit" enctype="multipart/form-data">
-  <input type="file" name="video" accept="video/*" required><br><br>
-  <select name="activity" required>
-    <option>100 meters</option>
-    <option>javelin</option>
-    <option>long jump</option>
-    <option>hurdles</option>
-    <option>discus</option>
-    <option>shot put</option>
-    <option>high jump</option>
-    <option>400 meters</option>
-  </select><br><br>
-  <button type="submit">Submit</button>
-</form>
-</body>
-</html>
+{% extends "base.html" %}
+{% set step = 1 %}
+{% block content %}
+<div class="card p-5 shadow-sm">
+  <h3 class="mb-4 text-center">Upload Your Training Video</h3>
+
+  <form method="POST" action="{{ url_for('submit') }}" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Video File *</label>
+      <input class="form-control" type="file" name="video" required>
+      <div class="form-text">Accepted formats: MP4, MOV, AVI – max 500 MB</div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Track &amp; Field Activity *</label>
+      <input class="form-control" type="text" name="activity" placeholder="e.g. Long jump" required>
+    </div>
+
+    <button class="btn btn-primary w-100">Next →</button>
+  </form>
+</div>
+{% endblock %}
